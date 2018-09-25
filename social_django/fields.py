@@ -41,8 +41,12 @@ class JSONField(JSONFieldBase):
         kwargs.setdefault('default', dict)
         super(JSONField, self).__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
-        return self.to_python(value)
+    if django.VERSION < (2,):
+        def from_db_value(self, value, expression, connection, context):
+            return self.to_python(value)
+    else:
+        def from_db_value(self, value, expression, connection):
+            return self.to_python(value)
 
     def to_python(self, value):
         """
